@@ -139,4 +139,15 @@ document.addEventListener('DOMContentLoaded', () => {
     if (downloadMp3Btn) {
         downloadMp3Btn.addEventListener('click', () => handleDownload(downloadMp3Btn, 'mp3'));
     }
+
+    // Handle external links in Electron
+    const devLink = document.getElementById('dev-link');
+    if (devLink && window.electronAPI) {
+        devLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            const url = devLink.getAttribute('href');
+            // We need to expose shell.openExternal in preload.js or use an IPC call
+            window.electronAPI.openExternal(url);
+        });
+    }
 });

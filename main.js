@@ -54,7 +54,7 @@ function createWindow() {
         minWidth: 800,
         minHeight: 600,
         frame: true,
-        icon: path.join(__dirname, 'public/icons/icon.ico'),
+        icon: path.join(__dirname, 'public/icons/icon.png'),
         webPreferences: {
             preload: path.join(__dirname, 'preload.js'),
             nodeIntegration: false,
@@ -91,4 +91,8 @@ app.on('activate', function () {
 // IPC communication for version and status
 ipcMain.handle('get-app-version', () => {
     return app.getVersion();
+});
+
+ipcMain.on('open-external', (event, url) => {
+    shell.openExternal(url);
 });
