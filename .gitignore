@@ -11,6 +11,16 @@ dist/
 crash-log.txt
 .DS_Store
 
+# Carpetas y Scripts Extra
+extension/
+INICIAR_AQUÍ.bat
+
 # Carpetas de Antigravity/Gemini (Opcional, pero recomendado no subir)
 .gemini/
 .agents/
+.agent/
+.task/
+task.md
+implementation_plan.md
+walkthrough.md
+GUIA_GITHUB.md
