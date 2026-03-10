@@ -1,13 +1,51 @@
-const { app, BrowserWindow, ipcMain } = require('electron');
+const { app, BrowserWindow, ipcMain, Menu, dialog, shell, net } = require('electron');
+Menu.setApplicationMenu(null);
 const path = require('path');
-const { autoUpdater } = require('electron-updater');
 const fs = require('fs');
 
-// Import the existing server logic (we'll modify server.js slightly to export the app or just require it)
-// For now, we'll let server.js run as usual but controlled by main.js
+// Import the existing server logic
 require('./server.js');
 
 let mainWindow;
+
+async function checkForUpdates() {
+    try {
+        const url = 'https://api.github.com/repos/davidrfyt/VimeoDownload/releases/latest';
+        const response = await net.fetch(url);
+        if (!response.ok) return;
+
+        const data = await response.json();
+        const latestVersion = data.tag_name.replace('v', '');
+        const currentVersion = app.getVersion();
+
+        if (isBetterVersion(latestVersion, currentVersion)) {
+            const result = dialog.showMessageBoxSync({
+                type: 'info',
+                buttons: ['Actualizar', 'Más tarde'],
+                defaultId: 0,
+                title: 'Actualización disponible',
+                message: `¡Hay una nueva versión disponible (${latestVersion})!`,
+                detail: '¿Quieres ir a GitHub para descargar el nuevo ZIP?'
+            });
+
+            if (result === 0) {
+                shell.openExternal('https://github.com/davidrfyt/VimeoDownload/releases/latest');
+            }
+        }
+    } catch (err) {
+        console.error('Error checking for updates:', err);
+    }
+}
+
+function isBetterVersion(latest, current) {
+    const l = latest.split('.').map(Number);
+    const c = current.split('.').map(Number);
+    for (let i = 0; i < 3; i++) {
+        if (l[i] > (c[i] || 0)) return true;
+        if (l[i] < (c[i] || 0)) return false;
+    }
+    return false;
+}
 
 function createWindow() {
     mainWindow = new BrowserWindow({
@@ -15,8 +53,8 @@ function createWindow() {
         height: 700,
         minWidth: 800,
         minHeight: 600,
-        frame: true, // We can make it frameless later for a pro look
-        icon: path.join(__dirname, 'public/icons/icon.ico'), // We'll need to generate an ico
+        frame: true,
+        icon: path.join(__dirname, 'public/icons/icon.ico'),
         webPreferences: {
             preload: path.join(__dirname, 'preload.js'),
             nodeIntegration: false,
@@ -25,15 +63,15 @@ function createWindow() {
         backgroundColor: '#0f172a'
     });
 
-    // In production, we might load the localhost URL or the file directly
     mainWindow.loadURL('http://localhost:3000');
+    mainWindow.maximize();
 
     mainWindow.on('closed', function () {
         mainWindow = null;
     });
 
-    // Auto-updater events
-    autoUpdater.checkForUpdatesAndNotify();
+    // Initial check
+    setTimeout(checkForUpdates, 3000);
 }
 
 app.on('ready', createWindow);

@@ -54,6 +54,24 @@ document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('video-thumbnail').src = data.thumbnail || 'https://via.placeholder.com/640x360.png?text=Sin+Miniatura';
             document.getElementById('video-duration').textContent = data.duration;
 
+            // Populate Quality Selector
+            const qualitySelect = document.getElementById('quality-select');
+            qualitySelect.innerHTML = '';
+
+            if (data.formats && data.formats.length > 0) {
+                data.formats.forEach(f => {
+                    const option = document.createElement('option');
+                    option.value = f.id;
+                    option.textContent = f.label;
+                    qualitySelect.appendChild(option);
+                });
+            } else {
+                const option = document.createElement('option');
+                option.value = '';
+                option.textContent = 'Calidad estándar (Auto)';
+                qualitySelect.appendChild(option);
+            }
+
             videoInfo.classList.remove('hidden');
 
         } catch (error) {
@@ -79,6 +97,13 @@ document.addEventListener('DOMContentLoaded', () => {
         const safeTitle = (title || 'video-descargado').replace(/[^a-zA-Z0-9 _-]/g, '').trim().replace(/\s+/g, '-');
         const filename = `${safeTitle || 'video'}.${format}`;
         let downloadUrl = `/api/download?url=${encodeURIComponent(url)}&title=${encodeURIComponent(title)}&format=${format}`;
+
+        if (format === 'mp4') {
+            const qualitySelect = document.getElementById('quality-select');
+            if (qualitySelect && qualitySelect.value) {
+                downloadUrl += `&qualityId=${encodeURIComponent(qualitySelect.value)}`;
+            }
+        }
 
         if (password) {
             downloadUrl += `&password=${encodeURIComponent(password)}`;

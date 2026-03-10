@@ -19,9 +19,8 @@
     <div class="app-status-bar">
         <div class="status-indicator">
             <span class="dot pulse"></span>
-            <span class="status-text">Server Online</span>
+            <span class="status-text">Versión <span id="app-version">1.2.0</span></span>
         </div>
-        <div class="version-info">v<span id="app-version">1.0.0</span></div>
     </div>
     <main class="container glass-panel">
         <header>
@@ -65,6 +64,12 @@
             <div class="details">
                 <h3 id="video-title">Título del video</h3>
                 <p>Listo para descargar</p>
+                <div class="quality-selector-container">
+                    <label for="quality-select">Calidad:</label>
+                    <select id="quality-select" class="quality-select">
+                        <option value="">Cargando calidades...</option>
+                    </select>
+                </div>
                 <div class="action-buttons" style="display: flex; gap: 10px;">
                     <button id="download-btn" class="download-btn" style="flex: 1;">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"

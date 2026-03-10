@@ -1,15 +1,15 @@
 {
     "name": "vimeo-downloader",
-    "version": "1.0.0",
+    "version": "1.2.1",
     "description": "Vimeo Downloader Pro - Professional Desktop Application",
     "author": {
         "name": "David",
         "email": "david@example.com"
     },
-    "homepage": "https://github.com/DAVID/VimeoDownload",
+    "homepage": "https://github.com/davidrfyt/VimeoDownload",
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/DAVID/VimeoDownload.git"
+        "url": "git+https://github.com/davidrfyt/VimeoDownload.git"
     },
     "main": "main.js",
     "scripts": {
@@ -21,12 +21,28 @@
         "appId": "com.david.vimeodownloader",
         "productName": "Vimeo Downloader Pro",
         "npmRebuild": false,
+        "directories": {
+            "output": "dist"
+        },
+        "files": [
+            "**/*",
+            "!dist/**",
+            "!node_modules/**",
+            "!.git/**"
+        ],
+        "extraResources": [
+            "yt-dlp.exe",
+            "ffmpeg.exe"
+        ],
         "win": {
-            "target": "portable"
+            "target": "portable",
+            "publish": [
+                "github"
+            ]
         },
         "publish": {
             "provider": "github",
-            "owner": "DAVID",
+            "owner": "davidrfyt",
             "repo": "VimeoDownload"
         }
     },

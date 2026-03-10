@@ -3,7 +3,6 @@ const cors = require('cors');
 const { spawn, exec } = require('child_process');
 const path = require('path');
 const fs = require('fs');
-const ffmpeg = require('ffmpeg-static');
 
 // Determine if we are running in Electron
 const isElectron = !!process.versions.electron;
@@ -17,7 +16,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // Determine binary paths (handles dev and packaged versions)
 let ytDlpPath = path.join(__dirname, 'yt-dlp.exe');
-let ffmpegPath = ffmpeg;
+let ffmpegPath = path.join(__dirname, 'ffmpeg.exe');
 
 if (isElectron) {
     const { app: electronApp } = require('electron');
@@ -68,11 +67,26 @@ app.post('/api/info', (req, res) => {
         }
         try {
             const info = JSON.parse(data);
+
+            // Extract available qualities (resolutions)
+            // Filter formats that have a height/resolution and are mp4/video
+            const formats = (info.formats || [])
+                .filter(f => f.height && (f.vcodec !== 'none'))
+                .map(f => ({
+                    id: f.format_id,
+                    height: f.height,
+                    label: `${f.height}p${f.fps ? ` (${f.fps}fps)` : ''}`
+                }))
+                // Remove duplicates based on height
+                .filter((v, i, a) => a.findIndex(t => (t.height === v.height)) === i)
+                .sort((a, b) => b.height - a.height);
+
             res.json({
                 title: info.title,
                 thumbnail: info.thumbnail,
                 duration: info.duration_string || `${Math.floor(info.duration / 60)}:${(info.duration % 60).toString().padStart(2, '0')}`,
-                url: url
+                url: url,
+                formats: formats
             });
         } catch (e) {
             console.error('JSON parse error:', e);
@@ -113,9 +127,12 @@ app.get('/api/download', (req, res) => {
             url
         ];
     } else {
+        // If a specific format ID is requested, use it, otherwise use best mp4
+        const formatSelect = req.query.qualityId ? `${req.query.qualityId}+bestaudio/best` : 'best[ext=mp4]/best';
         args = [
+            '--ffmpeg-location', ffmpegPath, // Added ffmpeg location just in case merging is needed
             '-q', '-o', '-',
-            '-f', 'best[ext=mp4]/best',
+            '-f', formatSelect,
             url
         ];
     }
