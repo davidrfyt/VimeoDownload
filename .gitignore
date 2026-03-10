@@ -1,0 +1,16 @@
+# Dependencias
+node_modules/
+
+# Compilaciones y Binarios
+dist/
+*.exe
+!yt-dlp.exe
+
+# Logs y Temporales
+*.log
+crash-log.txt
+.DS_Store
+
+# Carpetas de Antigravity/Gemini (Opcional, pero recomendado no subir)
+.gemini/
+.agents/

@@ -1,0 +1,44 @@
+{
+    "name": "vimeo-downloader",
+    "version": "1.0.0",
+    "description": "Vimeo Downloader Pro - Professional Desktop Application",
+    "author": {
+        "name": "David",
+        "email": "david@example.com"
+    },
+    "homepage": "https://github.com/DAVID/VimeoDownload",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/DAVID/VimeoDownload.git"
+    },
+    "main": "main.js",
+    "scripts": {
+        "start": "electron .",
+        "dist": "electron-builder",
+        "server": "node server.js"
+    },
+    "build": {
+        "appId": "com.david.vimeodownloader",
+        "productName": "Vimeo Downloader Pro",
+        "npmRebuild": false,
+        "win": {
+            "target": "portable"
+        },
+        "publish": {
+            "provider": "github",
+            "owner": "DAVID",
+            "repo": "VimeoDownload"
+        }
+    },
+    "dependencies": {
+        "cors": "^2.8.5",
+        "electron-updater": "^6.8.3",
+        "express": "^4.18.2",
+        "ffmpeg-static": "^5.3.0"
+    },
+    "devDependencies": {
+        "electron": "^40.8.0",
+        "electron-builder": "^26.8.1",
+        "electron-packager": "^17.1.2"
+    }
+}
