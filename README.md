@@ -1,6 +1,8 @@
-# 🎬 Vimeo Downloader Pro
+<p align="center">
+  <img src="public/icons/icon.png" width="200" alt="Vimeo Downloader Pro Logo">
+</p>
 
-![Logo](public/icons/icon.png)
+# <p align="center">🎬 Vimeo Downloader Pro</p>
 
 Una aplicación de escritorio profesional, rápida y elegante para descargar tus videos favoritos de Vimeo en la mejor calidad disponible. Olvídate de extensiones complicadas o sitios web llenos de publicidad; **Vimeo Downloader Pro** es una solución todo-en-uno con una interfaz de "cristal" (glassmorphism) diseñada para la mejor experiencia de usuario.
 
